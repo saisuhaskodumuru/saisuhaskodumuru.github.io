@@ -98,6 +98,15 @@
   })
 
   /**
+   * Desktop nav toggle
+   */
+  on('click', '.desktop-nav-toggle', function(e) {
+    select('body').classList.toggle('header-minimized')
+    this.classList.toggle('bi-list')
+    this.classList.toggle('bi-x')
+  })
+
+  /**
    * Scrool with ofset on links with a class name .scrollto
    */
   on('click', '.scrollto', function(e) {

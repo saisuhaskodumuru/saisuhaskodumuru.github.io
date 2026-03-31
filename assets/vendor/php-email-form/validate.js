@@ -1,7 +1,6 @@
 /**
-* PHP Email Form Validation - v3.6
-* URL: https://bootstrapmade.com/php-email-form/
-* Author: BootstrapMade.com
+* Modern Form Handling for Static Sites (Formspree Integration)
+* Replaces the old PHP-dependent validate.js
 */
 (function () {
   "use strict";
@@ -13,68 +12,47 @@
       event.preventDefault();
 
       let thisForm = this;
-
       let action = thisForm.getAttribute('action');
-      let recaptcha = thisForm.getAttribute('data-recaptcha-site-key');
       
-      if( ! action ) {
-        displayError(thisForm, 'The form action property is not set!');
+      if( ! action || action.includes('contact.php') ) {
+        displayError(thisForm, 'Please set a valid form endpoint (e.g., Formspree ID) to receive emails.');
         return;
       }
+
       thisForm.querySelector('.loading').classList.add('d-block');
       thisForm.querySelector('.error-message').classList.remove('d-block');
       thisForm.querySelector('.sent-message').classList.remove('d-block');
 
       let formData = new FormData( thisForm );
 
-      if ( recaptcha ) {
-        if(typeof grecaptcha !== "undefined" ) {
-          grecaptcha.ready(function() {
-            try {
-              grecaptcha.execute(recaptcha, {action: 'php_email_form_submit'})
-              .then(token => {
-                formData.set('recaptcha-response', token);
-                php_email_form_submit(thisForm, action, formData);
-              })
-            } catch(error) {
-              displayError(thisForm, error);
-            }
-          });
+      fetch(action, {
+        method: 'POST',
+        body: formData,
+        headers: {'Accept': 'application/json'}
+      })
+      .then(response => {
+        if( response.ok ) {
+          return response.json();
         } else {
-          displayError(thisForm, 'The reCaptcha javascript API url is not loaded!')
+          return response.json().then(data => {
+            if (Object.hasOwn(data, 'errors')) {
+              throw new Error(data["errors"].map(error => error["message"]).join(", "));
+            } else {
+              throw new Error('Form submission failed. Please try again.');
+            }
+          })
         }
-      } else {
-        php_email_form_submit(thisForm, action, formData);
-      }
-    });
-  });
-
-  function php_email_form_submit(thisForm, action, formData) {
-    fetch(action, {
-      method: 'POST',
-      body: formData,
-      headers: {'X-Requested-With': 'XMLHttpRequest'}
-    })
-    .then(response => {
-      if( response.ok ) {
-        return response.text();
-      } else {
-        throw new Error(`${response.status} ${response.statusText} ${response.url}`); 
-      }
-    })
-    .then(data => {
-      thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.trim() == 'OK') {
+      })
+      .then(data => {
+        thisForm.querySelector('.loading').classList.remove('d-block');
         thisForm.querySelector('.sent-message').classList.add('d-block');
         thisForm.reset(); 
-      } else {
-        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
-      }
-    })
-    .catch((error) => {
-      displayError(thisForm, error);
+      })
+      .catch((error) => {
+        displayError(thisForm, error);
+      });
     });
-  }
+  });
 
   function displayError(thisForm, error) {
     thisForm.querySelector('.loading').classList.remove('d-block');

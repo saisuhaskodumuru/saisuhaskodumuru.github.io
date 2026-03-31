@@ -1075,15 +1075,16 @@ section {
 # Footer
 --------------------------------------------------------------*/
 #footer {
-  padding: 15px;
+  padding: 20px 15px;
   color: #f4f6fd;
   font-size: 14px;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 300px;
-  z-index: 9999;
   background: #040b14;
+  margin-left: 0 !important;
+  width: 100% !important;
+  text-align: center;
+  position: relative;
+  z-index: 9999;
+  border-top: 1px solid #1a1a1a;
 }
 
 #footer .copyright {
@@ -1099,8 +1100,191 @@ section {
 
 @media (max-width: 1199px) {
   #footer {
-    position: static;
-    width: auto;
-    padding-right: 20px 15px;
+    margin-left: 0;
   }
+}
+
+/* Desktop Navigation Toggle */
+.desktop-nav-toggle {
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  z-index: 9998;
+  border: 0;
+  font-size: 24px;
+  transition: all 0.4s;
+  outline: none !important;
+  background-color: #149ddd;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+body:not(.header-minimized) .desktop-nav-toggle {
+  right: auto;
+  left: 245px;
+  background-color: transparent;
+  color: #a8a9b4;
+}
+
+body:not(.header-minimized) .desktop-nav-toggle:hover {
+  color: #fff;
+}
+
+@media (min-width: 1200px) {
+  body.header-minimized #header {
+    width: 65px !important;
+    padding: 0 5px !important;
+    left: 0 !important;
+    overflow: hidden !important;
+    border-right: 1px solid #1a1a1a;
+    transition: all ease-in-out 0.5s;
+  }
+  
+  body.header-minimized #header .profile,
+  body.header-minimized #header .nav-menu a span {
+    display: none !important;
+  }
+
+  body.header-minimized #header .nav-menu a {
+    justify-content: center !important;
+    padding: 15px 0 !important;
+  }
+
+  body.header-minimized #header .nav-menu a i {
+    padding-right: 0 !important;
+    margin: 0 !important;
+    font-size: 24px !important;
+    display: block !important;
+  }
+
+  body.header-minimized #main {
+    margin-left: 65px !important;
+  }
+}
+
+/* Projects Section Hover Effects */
+.portfolio-item .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+
+.portfolio-item .card .card-img-top {
+  transition: transform 0.5s ease;
+}
+
+.portfolio-item .card:hover .card-img-top {
+  transform: scale(1.05);
+}
+/*--------------------------------------------------------------
+# Tech Stack Marquee
+--------------------------------------------------------------*/
+.tech-marquee-section {
+  padding: 50px 0;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: 50px;
+  position: relative;
+}
+
+.marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  min-width: 100%;
+  gap: 50px;
+  animation: scroll 80s linear infinite;
+}
+
+.marquee-content:hover {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  padding: 10px;
+}
+
+.marquee-item:hover {
+  transform: translateY(-8px);
+}
+
+.marquee-item img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  transition: filter 0.3s ease;
+}
+
+.marquee-item:hover img {
+  filter: drop-shadow(0 4px 6px rgba(20, 157, 221, 0.3));
+}
+
+.marquee-item span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap;
+  font-family: "Poppins", sans-serif;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Gradient covers for smoothness */
+.marquee-container::before,
+.marquee-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 100%;
+  z-index: 2;
+}
+
+.marquee-container::before {
+  left: 0;
+  background: linear-gradient(to right, #fff, transparent);
+}
+
+.marquee-container::after {
+  right: 0;
+  background: linear-gradient(to left, #fff, transparent);
+}
+
+/* Professional Technology Logo Effect */
+.marquee-item img {
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.marquee-item:hover img {
+  opacity: 1;
+  transform: scale(1.1);
 }
